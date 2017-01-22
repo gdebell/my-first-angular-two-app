@@ -2,47 +2,22 @@ import { Component } from '@angular/core';
 //step 1: created a USER component.
 //step 13: inject the service from the http post request here
 //and then you need to add it as a provider- go into component decorator.
-import { PostsService }  from '../services/post.services';
+import {PostsService}  from '../services/post.services';
 
 
 //button with click function will toggle between displaying Hide Hobbies and Show Hobbies.  The showHobbies evaluate the showHobbies function. If it evaluates true, the Hide Hobbies will be displayed.
 
 //*ngIg will display if it evaluate to true
-
 //*ngFor will loop through hobbies and show each hobby (for loop)
-@Component({
-  selector: 'user',
-  template: `
-  <h1>{{name}}</h1>
-  <p><strong>Email:</strong> {{email}}</p>
-  <p><strong>Address:</strong> {{address.street}} {{address.city}}, {{address.state}} </p>
-  <button (click)="toggleHobbies()">{{showHobbies ? "Hide Hobbies" : "Show Hobbies" }}</button>
-  <div *ngIf="showHobbies">
-    <p><strong>Hobbies:</strong></p>
-    <ul>
-      <li *ngFor="let hobby of hobbies; let i = index">{{hobby}}<button (click)="deleteHobby(index)">DELETE</button></li>
 
-    </ul>
-    <form (submit)="addHobby(hobby.value)">
-      <label>Add Hobby: </label>
-      <input type="text" #hobby /><br />
-    </form>
-  </div>
-  <hr />
-  <h3>Edit User</h3>
-  <form>
-    <label>Name: </label>
-    <input type="text" name="name" [(ngModel)]="name"/><br />
-    <label>Email: </label>
-    <input type="text" name="email" [(ngModel)]="email"/><br />
-    <label>Street: </label>
-    <input type="text" name="address.street" [(ngModel)]="address.street"/><br />
-    <label>City: </label>
-    <input type="text" name="address.city" [(ngModel)]="address.city"/><br />
-    <label>State: </label>
-    <input type="text" name="address.state" [(ngModel)]="address.state"/><br />
-  <form>
-  `,
+//step 18:  change the template to templateURL and add the html file name in.
+//then add moduleID and set it equal to module.id.
+//then take the ode that was in the template url into a html file.
+//(added it to user.component.html)
+@Component({
+  moduleId: module.id,
+  selector: 'user',
+  templateUrl: `user.component.html`,
   providers: [PostsService]
 })
 //step 14: add providers and PostService
@@ -55,9 +30,10 @@ export class UserComponent {
   address: address;
   hobbies: string[];
   showHobbies: boolean;
+  posts:Post[];
 
   //Step 7: constructor runs every time component is rendered.
-  constructor(){
+  constructor(private postsService: PostsService){
     console.log('Hello beautiful constructor!! You ran.')
     this.name = 'John Doe';
     this.email = 'john@gmail.com';
@@ -69,9 +45,16 @@ export class UserComponent {
     this.hobbies = ['Music', 'Movies', 'Sports'];
     this.showHobbies = false;
 
+    this.postsService.getPosts().subscribe(posts => {
+      console.log(posts);
+      this.posts = posts;
+    });
+
+
     //step 17: to use postService in the constructor, it needs to be injected
     //into the contructor.  -Add it inside () after constructor above.
-    //then add code beloe
+    //then add the this.postService code that is directly above.
+    //next step: look above in component
   }
 
   toggleHobbies = function(){
@@ -101,6 +84,12 @@ interface address {
   street: string;
   city: string;
   state: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  body: string;
 }
 
 //step 9: Use directives: *ngIf, *ngFor, create a function for button with listener event
