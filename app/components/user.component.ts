@@ -14,6 +14,10 @@ import {PostsService}  from '../services/post.services';
 //then add moduleID and set it equal to module.id.
 //then take the ode that was in the template url into a html file.
 //(added it to user.component.html)
+
+
+//step 19: Create folder called about.components.ts in components file.
+//go to that file.
 @Component({
   moduleId: module.id,
   selector: 'user',
